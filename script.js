@@ -13,7 +13,7 @@ class IslamicFocusTimer {
         this.todayMinutes = parseInt(this.getStorageItem('islamicTodayMinutes')) || 0;
         this.dailyGoalHours = 5;
         this.streak = parseInt(this.getStorageItem('islamicStreak')) || 0;
-        this.yesterdayMinutes = parseInt(this.getStorageItem('islamicYesterdayMinutes')) || 0;
+        this.yesterdayMins = parseInt(this.getStorageItem('islamicYesterdayMinutes')) || 0;
         
         this.islamicQuotes = [
             { arabic: "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي", english: "My Lord, expand my chest and ease my task for me" },
@@ -59,7 +59,7 @@ class IslamicFocusTimer {
         this.progressCircle = document.getElementById('progressCircle');
         this.completedMinutes = document.getElementById('completedMinutes');
         this.streakDays = document.getElementById('streakDays');
-        this.yesterdayMinutes = document.getElementById('yesterdayMinutes');
+        this.yesterdayDisplay = document.getElementById('yesterdayMinutes');
         this.timerSection = document.getElementById('timerSection');
         this.notification = document.getElementById('notification');
         this.notificationTitle = document.getElementById('notificationTitle');
@@ -249,19 +249,19 @@ class IslamicFocusTimer {
 
     updateProgress() {
         const circumference = 2 * Math.PI * 75;
-        const progressPercent = Math.min(100, (this.todayMinutes / (this.dailyGoalHours * 60)) * 100;
+        const progressPercent = Math.min(100, (this.todayMinutes / (this.dailyGoalHours * 60)) * 100);
         this.progressCircle.style.strokeDasharray = circumference;
         this.progressCircle.style.strokeDashoffset = circumference - (progressPercent / 100) * circumference;
         
         this.completedMinutes.textContent = this.todayMinutes;
         this.streakDays.textContent = this.streak;
-        this.yesterdayMinutes.textContent = this.yesterdayMinutes;
+        this.yesterdayDisplay.textContent = this.yesterdayMins;
     }
 
     saveProgress() {
         this.setStorageItem('islamicTodayMinutes', this.todayMinutes);
         this.setStorageItem('islamicStreak', this.streak);
-        this.setStorageItem('islamicYesterdayMinutes', this.yesterdayMinutes);
+        this.setStorageItem('islamicYesterdayMinutes', this.yesterdayMins);
     }
 
     checkDailyReset() {
@@ -269,10 +269,11 @@ class IslamicFocusTimer {
         const today = new Date().toDateString();
         
         if (lastDate !== today) {
-            this.yesterdayMinutes = this.todayMinutes || 0;
+            this.yesterdayMins = this.todayMinutes || 0;
             this.todayMinutes = 0;
             this.setStorageItem('islamicLastDate', today);
             this.saveProgress();
+            this.updateProgress();
         }
     }
 }
