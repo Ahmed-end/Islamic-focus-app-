@@ -3,97 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Islamic Focus Timer - تايمر التركيز الإسلامي</title>
+    <title>Islamic Focus Timer</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="islamic-pattern"></div>
-    
-    <div class="container">
-        <div class="main-panel">
-            <div class="header">
-                <div class="app-title">Islamic Focus Timer</div>
-                <div class="bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
-                <div class="status-text" id="statusText">Prepare for focused worship</div>
-                <div class="description">
-                    Create a peaceful environment for study, dhikr, and reflection. 
-                    May Allah bless your efforts and grant you beneficial knowledge.
-                </div>
-            </div>
+    <header>
+        <h1>Islamic Focus Timer</h1>
+        <div class="bismillah" lang="ar">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+    </header>
 
-            <div class="timer-section" id="timerSection">
-                <div class="volume-control">
-                    <span>🔊</span>
-                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
-                    <span id="volumeValue">50%</span>
-                </div>
-                
-                <div class="timer-controls">
-                    <button class="timer-btn" id="decreaseBtn">−</button>
-                    <div class="timer-display" id="timerDisplay">25:00</div>
-                    <button class="timer-btn" id="increaseBtn">+</button>
-                </div>
-                <div class="timer-label">minutes</div>
-                
-                <div class="dua-text" id="duaText">
-                    "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي"<br>
-                    <em>"My Lord, expand my chest and ease my task for me"</em>
-                </div>
-                
-                <div class="skip-breaks">
-                    <input type="checkbox" id="skipBreaks">
-                    <label for="skipBreaks">Skip rest periods</label>
-                </div>
-            </div>
+    <main>
+        <section id="timerSection">
+            <div id="statusText">Get Ready</div>
+            <div id="timerDisplay">25:00</div>
 
-            <button class="start-btn" id="startBtn">🕌 Begin Focus Session</button>
-        </div>
-
-        <div class="progress-panel">
-            <div class="progress-header">Daily Progress - التقدم اليومي</div>
-            
-            <div class="progress-circle">
-                <svg>
-                    <circle class="background" cx="90" cy="90" r="75"></circle>
-                    <circle class="progress" cx="90" cy="90" r="75" id="progressCircle"></circle>
+            <div id="progressContainer">
+                <svg viewBox="0 0 180 180">
+                    <circle class="background" cx="90" cy="90" r="80"></circle>
+                    <circle class="progress" id="progressCircle" cx="90" cy="90" r="80"></circle>
                 </svg>
-                <div class="progress-text">
-                    <div class="progress-label">Daily Goal</div>
-                    <div class="progress-value" id="dailyGoal">5</div>
-                    <div class="progress-unit">hours</div>
-                </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-label">Yesterday</div>
-                    <div class="stat-value" id="yesterdayMinutes">0</div>
-                    <div class="stat-unit">minutes</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Streak</div>
-                    <div class="stat-value" id="streakDays">0</div>
-                    <div class="stat-unit">days</div>
-                </div>
+            <div id="controls">
+                <button id="startBtn" aria-label="Start session">Start Session</button>
+                <button id="increaseBtn" aria-label="Increase time">+</button>
+                <button id="decreaseBtn" aria-label="Decrease time">−</button>
+                <button id="skipBreaks" aria-label="Skip breaks">Skip Breaks</button>
             </div>
+        </section>
 
-            <div class="completed-text">
-                Completed: <span id="completedMinutes">0</span> minutes
-            </div>
+        <section id="duaSection">
+            <h2>Du'a Reminder</h2>
+            <p id="duaText" lang="ar">اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ</p>
+        </section>
 
-            <div class="motivation-quote">
-                "وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ"<br>
-                <em>"And whoever relies upon Allah, He is sufficient for him"</em>
-            </div>
-        </div>
-    </div>
+        <section id="statsSection">
+            <h2>Statistics</h2>
+            <p>Minutes Completed: <span id="completedMinutes">0</span></p>
+            <p>Streak Days: <span id="streakDays">0</span></p>
+            <p>Yesterday's Minutes: <span id="yesterdayMinutes">0</span></p>
+        </section>
 
-    <div class="notification" id="notification">
-        <div class="notification-title" id="notificationTitle">Notification</div>
-        <div id="notificationMessage">Message</div>
-    </div>
+        <section id="notification" class="hidden" role="alert" aria-live="assertive">
+            <h2 id="notificationTitle">Time’s up!</h2>
+            <p id="notificationMessage">Take a break or start the next session.</p>
+        </section>
 
-    <script src="script.js"></script>
+        <section id="volumeControl">
+            <label for="volumeSlider">Volume:</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.1">
+            <span id="volumeValue">0.5</span>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Islamic Focus Timer</p>
+    </footer>
+
+    <script src="script.js" defer></script>
 </body>
 </html>
+
