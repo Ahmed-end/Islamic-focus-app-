@@ -1,9 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Islamic Focus Timer</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
+     </style>
         * {
             margin: 0;
             padding: 0;
@@ -19,28 +21,1057 @@
             position: relative;
         }
 
-        /* ... (keep all your existing CSS styles here) ... */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(184, 134, 11, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(184, 134, 11, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
+        .islamic-pattern {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="islamic" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><polygon fill="%23b8860b" fill-opacity="0.2" points="10,0 20,10 10,20 0,10"/></pattern></defs><rect width="100" height="100" fill="url(%23islamic)"/></svg>') no-repeat;
+            opacity: 0.3;
         }
-        
-        .timer-display.pulse {
-            animation: islamicPulse 2s infinite, breathe 4s ease-in-out infinite;
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            gap: 30px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            background: rgba(26, 95, 63, 0.1);
+            border-radius: 20px;
+            border: 2px solid rgba(184, 134, 11, 0.3);
+            backdrop-filter: blur(10px);
         }
-        
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #b8860b;
+            margin-bottom: 10px;
+            font-family: 'Noto Sans Arabic', serif;
+        }
+
+        .bismillah {
+            font-size: 20px;
+            color: #d4af37;
+            margin-bottom: 20px;
+            font-family: 'Amiri', serif;
+            font-weight: 700;
+        }
+
+        .status-text {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #f5f5dc;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .description {
+            font-size: 16px;
+            color: #c9b037;
+            line-height: 1.6;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .timer-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(184, 134, 11, 0.4);
+        }
+
+        .timer-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .timer-btn {
+            background: linear-gradient(145deg, #b8860b, #9a7209);
+            border: none;
+            color: #f5f5dc;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .timer-btn:hover:not(:disabled) {
+            background: linear-gradient(145deg, #d4af37, #b8860b);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .timer-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .timer-display {
+            font-size: 84px;
+            font-weight: 700;
+            color: #d4af37;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            font-family: 'Noto Sans Arabic', serif;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .timer-label {
+            color: #c9b037;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .dua-text {
+            color: #d4af37;
+            font-size: 16px;
+            margin: 20px 0;
+            font-style: italic;
+            text-align: center;
+            max-width: 400px;
+            line-height: 1.5;
+            transition: opacity 0.5s ease;
+        }
+
+        .skip-breaks {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #c9b037;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .skip-breaks input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #b8860b;
+            border-radius: 3px;
+        }
+
+        .start-btn {
+            background: linear-gradient(145deg, #1a5f3f, #0d4d2e);
+            color: #f5f5dc;
+            border: 2px solid #b8860b;
+            padding: 18px 50px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            font-family: 'Noto Sans Arabic', serif;
+        }
+
+        .start-btn:hover {
+            background: linear-gradient(145deg, #0d4d2e, #1a5f3f);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border-color: #d4af37;
+        }
+
+        .start-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .progress-panel {
+            background: linear-gradient(145deg, rgba(26, 95, 63, 0.2), rgba(13, 77, 46, 0.2));
+            border-radius: 20px;
+            padding: 35px;
+            width: 350px;
+            height: fit-content;
+            border: 2px solid rgba(184, 134, 11, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .progress-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #d4af37;
+            font-family: 'Noto Sans Arabic', serif;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 35px;
+        }
+
         .progress-circle svg {
-            filter: drop-shadow(0 0 10px rgba(184, 134, 11, 0.3));
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
         }
-        
-        .active-session .progress-circle {
+
+        .progress-circle .background {
+            fill: none;
+            stroke: rgba(184, 134, 11, 0.3);
+            stroke-width: 10;
+        }
+
+        .progress-circle .progress {
+            fill: none;
+            stroke: #b8860b;
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.8s ease;
+            filter: drop-shadow(0 0 4px rgba(184, 134, 11, 0.5));
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-label {
+            color: #c9b037;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .progress-value {
+            font-size: 40px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 5px;
+            font-family: 'Noto Sans Arabic', serif;
+        }
+
+        .progress-unit {
+            color: #c9b037;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(184, 134, 11, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(184, 134, 11, 0.2);
+        }
+
+        .stat-label {
+            color: #c9b037;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 5px;
+            font-family: 'Noto Sans Arabic', serif;
+        }
+
+        .stat-unit {
+            color: #c9b037;
+            font-size: 13px;
+        }
+
+        .completed-text {
+            text-align: center;
+            color: #c9b037;
+            font-size: 16px;
+            font-weight: 600;
+            background: rgba(184, 134, 11, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(184, 134, 11, 0.2);
+        }
+
+        .motivation-quote {
+            text-align: center;
+            color: #d4af37;
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #b8860b;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #1a5f3f, #0d4d2e);
+            color: #f5f5dc;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 2px solid #b8860b;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #d4af37;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #c9b037;
+            font-size: 16px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 6px;
+            background: rgba(184, 134, 11, 0.3);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #b8860b;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #b8860b;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 15px;
+                gap: 20px;
+            }
+
+            .main-panel {
+                padding: 25px;
+            }
+
+            .timer-display {
+                font-size: 64px;
+            }
+
+            .progress-panel {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+
+        .pulse {
+            animation: islamicPulse 2s infinite;
+        }
+
+        @keyframes islamicPulse {
+            0% { 
+                opacity: 1; 
+                text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            }
+            50% { 
+                opacity: 0.8; 
+                text-shadow: 0 4px 12px rgba(212, 175, 55, 0.6);
+            }
+            100% { 
+                opacity: 1; 
+                text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            }
+        }
+
+        .active-session {
+            background: linear-gradient(145deg, rgba(26, 95, 63, 0.3), rgba(13, 77, 46, 0.3));
+        }
+
+        .glow {
             animation: glow 3s ease-in-out infinite alternate;
         }
-    </style>
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 20px rgba(184, 134, 11, 0.4);
+            }
+            to {
+                box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+            }
+        }
+
+        .pause-btn {
+            background: linear-gradient(145deg, #8b4513, #654321);
+            border: none;
+            color: #f5f5dc;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            margin-left: 10px;
+        }
+
+        .pause-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+
+        .reset-btn {
+            background: linear-gradient(145deg, #8b0000, #660000);
+            border: none;
+            color: #f5f5dc;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            margin-left: 10px;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+   
+
+    
 </head>
+<body>
+    <div class="islamic-pattern"></div>
+    
+    <div class="container">
+        <div class="main-panel" id="mainPanel">
+            <div class="header">
+                <h1 class="app-title">Islamic Focus Timer</h1>
+                <div class="bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+                <div class="status-text" id="statusText">Ready to Focus</div>
+                <p class="description">Start your focused work session with mindfulness and purpose.</p>
+            </div>
+
+            <div class="timer-section">
+                <div class="timer-controls">
+                    <button class="timer-btn" id="decreaseBtn" title="Decrease time">−</button>
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <button class="timer-btn" id="increaseBtn" title="Increase time">+</button>
+                </div>
+                <div class="timer-label" id="timerLabel">Focus Session</div>
+            </div>
+
+            <div class="dua-text" id="duaText">
+                <div class="arabic" style="font-size: 20px; margin-bottom: 8px;">اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ</div>
+                <div class="english">"O Allah, help me remember You, thank You, and worship You in the best manner."</div>
+            </div>
+
+            <div class="volume-control">
+                <span>🔊 Volume:</span>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
+                <span id="volumeValue">0.5</span>
+            </div>
+
+            <div class="skip-breaks">
+                <input type="checkbox" id="skipBreaksCheckbox">
+                <label for="skipBreaksCheckbox">Skip breaks</label>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="start-btn" id="startBtn">Start Session</button>
+                <button class="pause-btn" id="pauseBtn" style="display: none;">Pause</button>
+                <button class="reset-btn" id="resetBtn" style="display: none;">Reset</button>
+            </div>
+        </div>
+
+        <div class="progress-panel">
+            <h2 class="progress-header">Progress</h2>
+            
+            <div class="progress-circle">
+                <svg viewBox="0 0 180 180">
+                    <circle class="background" cx="90" cy="90" r="80"></circle>
+                    <circle class="progress" id="progressCircle" cx="90" cy="90" r="80" 
+                            stroke-dasharray="502" stroke-dashoffset="502"></circle>
+                </svg>
+                <div class="progress-text">
+                    <div class="progress-label">Remaining</div>
+                    <div class="progress-value" id="progressValue">25</div>
+                    <div class="progress-unit">min</div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">TODAY</div>
+                    <div class="stat-value" id="completedMinutes">0</div>
+                    <div class="stat-unit">minutes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">STREAK</div>
+                    <div class="stat-value" id="streakDays">0</div>
+                    <div class="stat-unit">days</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">SESSIONS</div>
+                    <div class="stat-value" id="sessionsCount">0</div>
+                    <div class="stat-unit">completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">FOCUS</div>
+                    <div class="stat-value" id="focusScore">100</div>
+                    <div class="stat-unit">%</div>
+                </div>
+            </div>
+
+            <div class="motivation-quote">
+                <div class="arabic" style="font-size: 16px; margin-bottom: 8px;">خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ</div>
+                <div>"The best of people are those who are most beneficial to others." - Prophet Muhammad ﷺ</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <div class="notification-title" id="notificationTitle">Session Complete!</div>
+        <div id="notificationMessage">Great work! Time for a break.</div>
+    </div>
+
+    <script>
+        class IslamicFocusTimer {
+            constructor() {
+                this.sessionDuration = 25 * 60; // 25 minutes in seconds
+                this.remainingTime = this.sessionDuration;
+                this.isRunning = false;
+                this.isPaused = false;
+                this.timerInterval = null;
+                this.volume = 0.5;
+                this.completedMinutes = 0;
+                this.sessionsCount = 0;
+                this.streakDays = 0;
+                this.skipBreaks = false;
+                this.isBreakTime = false;
+                this.breakDuration = 5 * 60; // 5 minutes
+                this.lastSessionDate = null;
+
+                // DOM Elements
+                this.statusText = document.getElementById("statusText");
+                this.timerDisplay = document.getElementById("timerDisplay");
+                this.timerLabel = document.getElementById("timerLabel");
+                this.progressCircle = document.getElementById("progressCircle");
+                this.progressValue = document.getElementById("progressValue");
+                this.completedSpan = document.getElementById("completedMinutes");
+                this.sessionsSpan = document.getElementById("sessionsCount");
+                this.streakSpan = document.getElementById("streakDays");
+                this.volumeSlider = document.getElementById("volumeSlider");
+                this.volumeValue = document.getElementById("volumeValue");
+                this.startBtn = document.getElementById("startBtn");
+                this.pauseBtn = document.getElementById("pauseBtn");
+                this.resetBtn = document.getElementById("resetBtn");
+                this.duaText = document.getElementById("duaText");
+                this.mainPanel = document.getElementById("mainPanel");
+
+                // Islamic Content Collections
+                this.duas = [
+                    {
+                        arabic: "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+                        english: "O Allah, help me remember You, thank You, and worship You in the best manner."
+                    },
+                    {
+                        arabic: "رَبِّ زِدْنِي عِلْمًا",
+                        english: "My Lord, increase me in knowledge."
+                    },
+                    {
+                        arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+                        english: "Our Lord, give us good in this world and good in the hereafter."
+                    },
+                    {
+                        arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+                        english: "Allah is sufficient for us and He is the best Disposer of affairs."
+                    },
+                    {
+                        arabic: "وَاللَّهُ خَلَقَكُمْ وَمَا تَعْمَلُونَ",
+                        english: "And it is Allah who created you and what you do."
+                    }
+                ];
+
+                this.quranVerses = [
+                    {
+                        arabic: "وَاذْكُر رَّبَّكَ إِذَا نَسِيتَ",
+                        english: "And remember your Lord when you forget."
+                    },
+                    {
+                        arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+                        english: "Indeed, with hardship comes ease."
+                    },
+                    {
+                        arabic: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا * إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+                        english: "For indeed, with hardship comes ease. Indeed, with hardship comes ease."
+                    },
+                    {
+                        arabic: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا",
+                        english: "And whoever fears Allah - He will make for him a way out."
+                    },
+                    {
+                        arabic: "وَتَوَكَّلْ عَلَى الْحَيِّ الَّذِي لَا يَمُوتُ",
+                        english: "And rely upon the Ever-Living who does not die."
+                    }
+                ];
+
+                this.hadiths = [
+                    {
+                        arabic: "خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ",
+                        english: "The best of people are those who are most beneficial to others."
+                    },
+                    {
+                        arabic: "اطْلُبُوا الْعِلْمَ مِنَ الْمَهْدِ إِلَى اللَّحْدِ",
+                        english: "Seek knowledge from the cradle to the grave."
+                    },
+                    {
+                        arabic: "لَيْسَ الْمُؤْمِنُ الَّذِي يَشْبَعُ وَجَارُهُ جَائِعٌ",
+                        english: "The believer is not one who eats his fill while his neighbor goes hungry."
+                    },
+                    {
+                        arabic: "مَنْ لَا يَرْحَمُ لَا يُرْحَمُ",
+                        english: "Whoever does not show mercy will not be shown mercy."
+                    },
+                    {
+                        arabic: "لَيْسَ الشَّدِيدُ بِالصُّرَعَةِ، إِنَّمَا الشَّدِيدُ الَّذِي يَمْلِكُ نَفْسَهُ عِنْدَ الْغَضَبِ",
+                        english: "The strong person is not the one who can wrestle someone else down. The strong person is the one who can control himself when he is angry."
+                    }
+                ];
+
+                this.initializeEventListeners();
+                this.loadProgress();
+                this.updateDisplay();
+                this.updateIslamicContent();
+            }
+
+            initializeEventListeners() {
+                this.startBtn.addEventListener("click", () => this.toggleTimer());
+                this.pauseBtn.addEventListener("click", () => this.pauseTimer());
+                this.resetBtn.addEventListener("click", () => this.resetTimer());
+                
+                document.getElementById("increaseBtn").addEventListener("click", () => this.adjustTime(1));
+                document.getElementById("decreaseBtn").addEventListener("click", () => this.adjustTime(-1));
+                
+                document.getElementById("skipBreaksCheckbox").addEventListener("change", (e) => {
+                    this.skipBreaks = e.target.checked;
+                });
+
+                this.volumeSlider.addEventListener("input", () => {
+                    this.volume = parseFloat(this.volumeSlider.value);
+                    this.volumeValue.textContent = this.volume.toFixed(1);
+                });
+            }
+
+            // Save progress to localStorage
+            saveProgress() {
+                const today = new Date().toDateString();
+                const progress = {
+                    completedMinutes: this.completedMinutes,
+                    sessionsCount: this.sessionsCount,
+                    streakDays: this.streakDays,
+                    lastSessionDate: today
+                };
+                localStorage.setItem('islamicFocusTimerProgress', JSON.stringify(progress));
+            }
+
+            // Load progress from localStorage
+            loadProgress() {
+                const savedProgress = localStorage.getItem('islamicFocusTimerProgress');
+                if (savedProgress) {
+                    const progress = JSON.parse(savedProgress);
+                    this.completedMinutes = progress.completedMinutes || 0;
+                    this.sessionsCount = progress.sessionsCount || 0;
+                    
+                    // Calculate streak
+                    const today = new Date();
+                    const lastDate = new Date(progress.lastSessionDate);
+                    const diffTime = today - lastDate;
+                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays === 0) {
+                        // Same day
+                        this.streakDays = progress.streakDays || 0;
+                    } else if (diffDays === 1) {
+                        // Consecutive day
+                        this.streakDays = (progress.streakDays || 0) + 1;
+                    } else {
+                        // Broken streak
+                        this.streakDays = 1;
+                    }
+                }
+            }
+
+            formatTime(seconds) {
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                return `${m}:${s}`;
+            }
+
+            updateDisplay() {
+                this.timerDisplay.textContent = this.formatTime(this.remainingTime);
+                this.progressValue.textContent = Math.ceil(this.remainingTime / 60);
+                
+                const totalDuration = this.isBreakTime ? this.breakDuration : this.sessionDuration;
+                const progress = 1 - (this.remainingTime / totalDuration);
+                const dashOffset = 502 - (502 * progress);
+                this.progressCircle.style.strokeDashoffset = dashOffset;
+
+                this.completedSpan.textContent = this.completedMinutes;
+                this.sessionsSpan.textContent = this.sessionsCount;
+                this.streakSpan.textContent = this.streakDays;
+            }
+
+            updateIslamicContent() {
+                // Randomly select between dua, quran verse, or hadith
+                const contentTypes = ['dua', 'quran', 'hadith'];
+                const selectedType = contentTypes[Math.floor(Math.random() * contentTypes.length)];
+                
+                let content;
+                switch(selectedType) {
+                    case 'dua':
+                        content = this.duas[Math.floor(Math.random() * this.duas.length)];
+                        break;
+                    case 'quran':
+                        content = this.quranVerses[Math.floor(Math.random() * this.quranVerses.length)];
+                        break;
+                    case 'hadith':
+                        content = this.hadiths[Math.floor(Math.random() * this.hadiths.length)];
+                        break;
+                }
+                
+                this.duaText.innerHTML = `
+                    <div class="arabic" style="font-size: 20px; margin-bottom: 8px;">${content.arabic}</div>
+                    <div class="english">"${content.english}"</div>
+                `;
+            }
+
+            updateMotivationalQuote() {
+                const quote = this.hadiths[Math.floor(Math.random() * this.hadiths.length)];
+                document.querySelector('.motivation-quote').innerHTML = `
+                    <div class="arabic" style="font-size: 16px; margin-bottom: 8px;">${quote.arabic}</div>
+                    <div>"${quote.english}" - Prophet Muhammad ﷺ</div>
+                `;
+            }
+
+            adjustTime(minutes) {
+                if (this.isRunning || this.isBreakTime) return;
+                
+                const newDuration = this.sessionDuration + (minutes * 60);
+                if (newDuration > 0 && newDuration <= 60 * 60) { // Max 60 minutes
+                    this.sessionDuration = newDuration;
+                    this.remainingTime = this.sessionDuration;
+                    this.updateDisplay();
+                }
+            }
+
+            toggleTimer() {
+                if (this.isRunning) {
+                    this.stopTimer();
+                } else {
+                    this.startTimer();
+                }
+            }
+
+            startTimer() {
+                this.isRunning = true;
+                this.isPaused = false;
+                
+                this.startBtn.style.display = 'none';
+                this.pauseBtn.style.display = 'inline-block';
+                this.resetBtn.style.display = 'inline-block';
+                
+                this.statusText.textContent = this.isBreakTime ? "Break Time" : "Focus Time";
+                this.timerLabel.textContent = this.isBreakTime ? "Break Session" : "Focus Session";
+                this.mainPanel.classList.add('active-session');
+                this.timerDisplay.classList.add('pulse');
+                
+                this.timerInterval = setInterval(() => {
+                    this.remainingTime--;
+                    this.updateDisplay();
+                    
+                    if (this.remainingTime <= 0) {
+                        this.completeSession();
+                    }
+                }, 1000);
+            }
+
+            pauseTimer() {
+                if (this.isRunning) {
+                    clearInterval(this.timerInterval);
+                    this.isRunning = false;
+                    this.isPaused = true;
+                    this.pauseBtn.textContent = 'Resume';
+                    this.statusText.textContent = 'Paused';
+                    this.timerDisplay.classList.remove('pulse');
+                } else if (this.isPaused) {
+                    this.startTimer();
+                    this.pauseBtn.textContent = 'Pause';
+                }
+            }
+
+            stopTimer() {
+                clearInterval(this.timerInterval);
+                this.isRunning = false;
+                this.isPaused = false;
+                
+                this.startBtn.style.display = 'inline-block';
+                this.pauseBtn.style.display = 'none';
+                this.resetBtn.style.display = 'none';
+                
+                this.statusText.textContent = "Ready to Focus";
+                this.mainPanel.classList.remove('active-session');
+                this.timerDisplay.classList.remove('pulse');
+            }
+
+            resetTimer() {
+                this.stopTimer();
+                this.remainingTime = this.isBreakTime ? this.breakDuration : this.sessionDuration;
+                this.updateDisplay();
+                this.statusText.textContent = "Ready to Focus";
+                this.timerLabel.textContent = "Focus Session";
+                this.isBreakTime = false;
+            }
+
+            completeSession() {
+                this.stopTimer();
+                this.playNotificationSound();
+                
+                if (this.isBreakTime) {
+                    // Break completed, back to focus
+                    this.isBreakTime = false;
+                    this.remainingTime = this.sessionDuration;
+                    this.showNotification("Break Complete!", "Ready for your next focus session?");
+                    this.statusText.textContent = "Break Complete";
+                    this.timerLabel.textContent = "Focus Session";
+                } else {
+                    // Focus session completed
+                    const minutesCompleted = Math.floor(this.sessionDuration / 60);
+                    this.completedMinutes += minutesCompleted;
+                    this.sessionsCount++;
+                    
+                    // Update streak
+                    const today = new Date().toDateString();
+                    if (!this.lastSessionDate || this.lastSessionDate !== today) {
+                        const lastDate = this.lastSessionDate ? new Date(this.lastSessionDate) : null;
+                        const todayObj = new Date(today);
+                        
+                        if (lastDate && (todayObj - lastDate) / (1000 * 60 * 60 * 24) === 1) {
+                            this.streakDays++;
+                        } else if (!lastDate || (todayObj - lastDate) / (1000 * 60 * 60 * 24) > 1) {
+                            this.streakDays = 1;
+                        }
+                        
+                        this.lastSessionDate = today;
+                    }
+                    
+                    if (this.skipBreaks) {
+                        this.remainingTime = this.sessionDuration;
+                        this.showNotification("Session Complete!", "Great work! Ready for another session?");
+                        this.statusText.textContent = "Session Complete";
+                    } else {
+                        // Start break
+                        this.isBreakTime = true;
+                        this.remainingTime = this.breakDuration;
+                        this.showNotification("Focus Complete!", "Time for a well-deserved break!");
+                        this.statusText.textContent = "Break Time";
+                        this.timerLabel.textContent = "Break Session";
+                    }
+                }
+                
+                this.saveProgress();
+                this.updateDisplay();
+                this.updateIslamicContent();
+                this.updateMotivationalQuote();
+            }
+
+            playNotificationSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+                    
+                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(this.volume * 0.3, audioContext.currentTime + 0.01);
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                } catch (error) {
+                    console.log('Audio notification not available');
+                }
+            }
+
+            showNotification(title, message) {
+                const notification = document.getElementById("notification");
+                const notificationTitle = document.getElementById("notificationTitle");
+                const notificationMessage = document.getElementById("notificationMessage");
+                
+                notificationTitle.textContent = title;
+                notificationMessage.textContent = message;
+                
+                notification.classList.add("show");
+                
+                setTimeout(() => {
+                    notification.classList.remove("show");
+                }, 5000);
+            }
+        }
+
+        // Initialize the timer when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new IslamicFocusTimer();
+            
+            // Add twinkling stars effect
+            function createStar() {
+                const star = document.createElement('div');
+                star.style.cssText = `
+                    position: fixed;
+                    width: 2px;
+                    height: 2px;
+                    background: #d4af37;
+                    border-radius: 50%;
+                    opacity: 0;
+                    pointer-events: none;
+                    z-index: -1;
+                `;
+                
+                star.style.left = Math.random() * window.innerWidth + 'px';
+                star.style.top = Math.random() * window.innerHeight + 'px';
+                
+                document.body.appendChild(star);
+                
+                star.animate([
+                    { opacity: 0, transform: 'scale(0)' },
+                    { opacity: 0.8, transform: 'scale(1)' },
+                    { opacity: 0, transform: 'scale(0)' }
+                ], {
+                    duration: 2000 + Math.random() * 3000,
+                    easing: 'ease-in-out'
+                }).addEventListener('finish', () => {
+                    star.remove();
+                });
+            }
+
+            setInterval(createStar, 1500);
+            
+            // Add floating animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-5px); }
+                }
+                
+                .timer-display.pulse {
+                    animation: islamicPulse 2s infinite, breathe 4s ease-in-out infinite;
+                }
+                
+                @keyframes breathe {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.02); }
+                }
+                
+                .progress-circle svg {
+                    filter: drop-shadow(0 0 10px rgba(184, 134, 11, 0.3));
+                }
+                
+                .active-session .progress-circle {
+                    animation: glow 3s ease-in-out infinite alternate;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </style>
+    </script>
+</body>
+</html>
